@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Iconic Money Heist: The Pilot Episode | Registration</title>
+    <!-- Tailwind CSS for Modern Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- QRCode.js for generating QR codes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- HTML5 QRCode Scanner for Admin Vault Access -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    
+    <!-- Custom Theme & Animations Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        heist: {
+                            red: '#E50914',
+                            darkred: '#B81D24',
+                            black: '#050505',
+                            gray: '#111111',
+                            input: '#1a1a1a',
+                            lightgray: '#2a2a2a'
+                        }
+                    },
+                    boxShadow: {
+                        'glow-red': '0 0 15px rgba(229, 9, 20, 0.4)',
+                        'glow-red-lg': '0 0 30px rgba(229, 9, 20, 0.6)',
+                        'glow-red-inner': 'inset 0 0 10px rgba(229, 9, 20, 0.2)',
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'loading-bar': 'loadBar 2s ease-in-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        loadBar: {
+                            '0%': { width: '0%' },
+                            '100%': { width: '100%' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Inter', system-ui, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #E50914; border-radius: 4px; }
+        
+        /* Auto-fill fix for dark mode */
+        input:-webkit-autofill, select:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 30px #1a1a1a inset !important;
+            -webkit-text-fill-color: white !important;
+        }
+        
+        /* Dropdown styling */
+        select option {
+            background-color: #111111;
+            color: white;
+            padding: 10px;
+        }
+
+        /* Color Scheme for Date Picker icon */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        /* Hide Number Spinners for strict sizing alignment */
+        input[type="number"]::-webkit-inner-spin-button, 
+        input[type="number"]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        /* Scanner Specific Styles for Dark Theme */
+        #reader {
+            border: 2px solid #2a2a2a !important;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+        }
+        #reader button {
+            background-color: #E50914 !important;
+            color: white !important;
+            border-radius: 6px !important;
+            padding: 8px 16px !important;
+            border: none !important;
+            margin: 10px 0 !important;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        #reader select {
+            background-color: #1a1a1a !important;
+            color: white !important;
+            padding: 8px !important;
+            border: 1px solid #2a2a2a !important;
+            border-radius: 6px !important;
+            margin-bottom: 10px;
+        }
+        #reader a {
+            color: #E50914 !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center relative overflow-x-hidden">
+
+    <!-- INITIALIZING SPLASH SCREEN -->
+    <div id="splash-screen" class="fixed inset-0 z-50 bg-heist-black flex flex-col items-center justify-center transition-opacity duration-700 ease-in-out">
+        <div class="w-24 h-24 sm:w-32 sm:h-32 mb-6 text-heist-red animate-pulse-slow">
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+            </svg>
+        </div>
+        <h1 class="text-2xl sm:text-4xl font-black text-white tracking-[0.2em] uppercase drop-shadow-md text-center px-4">Iconic Money Heist</h1>
+        <h2 class="text-sm sm:text-xl font-bold text-heist-red tracking-[0.3em] uppercase mt-2 drop-shadow-md text-center">The Pilot Episode</h2>
+        <p class="text-gray-500 mt-6 text-xs tracking-widest uppercase">Establishing Secure Connection...</p>
+        
+        <!-- Loading Bar -->
+        <div class="mt-4 w-48 sm:w-64 h-1 bg-gray-800 rounded-full overflow-hidden">
+            <div class="h-full bg-heist-red animate-loading-bar shadow-glow-red"></div>
+        </div>
+    </div>
+
+    <!-- MAIN FORM SECTION -->
+    <main id="form-section" class="w-full max-w-3xl px-4 py-8 sm:p-6 mb-auto relative z-10 hidden opacity-0 transition-opacity duration-700">
+        
+        <div class="bg-heist-gray border border-heist-lightgray rounded-[24px] p-5 sm:p-10 shadow-2xl relative group hover:border-heist-red/40 transition-colors duration-500">
+            <!-- Decorative Top Bar -->
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-heist-red to-transparent rounded-t-[24px]"></div>
+
+            <!-- MISSION BRIEF -->
+            <div class="mb-8 bg-[#161616] border border-heist-lightgray p-5 sm:p-6 rounded-2xl shadow-inner">
+                <h2 class="text-xl sm:text-2xl font-black text-white uppercase tracking-widest flex items-center gap-3 mb-4">
+                    <span class="text-heist-red">📁</span> Mission Brief
+                </h2>
+                <div class="text-gray-300 text-sm space-y-4 tracking-wide leading-relaxed">
+                    <p>Attention, Annettes! 🌟</p>
+                    <p>The Rotary Club of Chennai Icons with Annette Committee is assembling its crew for <strong class="text-white">Iconic Money Heist: The Pilot Episode</strong>. If you're ready to join The Professor's mission, complete your registration below and secure your spot.</p>
+                    
+                    <ul class="space-y-2 text-gray-400 font-medium bg-[#111111] p-4 rounded-xl border border-gray-800">
+                        <li class="flex items-center gap-2"><span class="text-xl">📅</span> <span class="text-white">19th July, 2026</span></li>
+                        <li class="flex items-center gap-2"><span class="text-xl">🕒</span> <span class="text-white">5:30 PM Onwards</span></li>
+                        <li class="flex items-center gap-2"><span class="text-xl">📍</span> <span class="text-white">Jalpaan, T.Nagar</span></li>
+                    </ul>
+
+                    <div class="border-l-4 border-heist-red pl-4 mt-6">
+                        <h3 class="text-white font-bold mb-1 flex items-center gap-2 text-sm sm:text-base">⭐ Registration Reward System</h3>
+                        <p class="text-[11px] sm:text-xs text-gray-400 mb-3">Register early and earn bonus Annette Points (AP)!</p>
+                        <ul class="text-xs sm:text-sm space-y-2 text-yellow-500">
+                            <li>💰 On or before 17th: <span class="font-bold text-white">+100 AP</span></li>
+                            <li>💰 On 18th: <span class="font-bold text-white">+50 AP</span></li>
+                            <li>💰 On 19th onwards: <span class="font-bold text-white">No bonus points</span></li>
+                        </ul>
+                    </div>
+
+                    <p class="mt-4 font-bold text-heist-red pt-4 border-t border-gray-800 text-center sm:text-left">
+                        Fill in your details carefully. The Professor is watching... 👀<br>
+                        <span class="text-white block mt-2 text-lg sm:text-xl">Bella Ciao! 🎭💰</span>
+                    </p>
+                </div>
+            </div>
+
+            <form id="registrationForm" onsubmit="handleFormSubmit(event)" class="space-y-5 sm:space-y-6">
+                
+                <!-- Operative Name & Age -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+                    <div class="relative md:col-span-2 group">
+                        <label class="block text-xs font-bold text-gray-400 mb-2 tracking-wider uppercase group-hover:text-heist-red transition-colors">What's your real identity? (Name)</label>
+                        <input type="text" id="name" required class="w-full px-4 py-3.5 bg-heist-input border border-heist-lightgray rounded-xl focus:ring-2 focus:ring-heist-red focus:border-heist-red outline-none transition-all text-white shadow-inner text-sm sm:text-base">
+                    </div>
+                    <div class="relative group">
+                        <label class="block text-xs font-bold text-gray-400 mb-2 tracking-wider uppercase group-hover:text-heist-red transition-colors">Level (Age)</label>
+                        <input type="number" id="age" readonly placeholder="Auto-calculated" class="w-full px-4 py-3.5 bg-[#0a0a0a] border border-gray-800 rounded-xl outline-none text-gray-400 shadow-inner text-center font-bold cursor-not-allowed text-sm sm:text-base">
+                    </div>
+                </div>
+
+                <!-- DOB & Gender -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+                    <div class="relative group">
+                        <label class="block text-xs font-bold text-gray-400 mb-2 tracking-wider uppercase group-hover:text-heist-red transition-colors">Date of Birth 🌍</label>
+                        <input type="date" id="dob" required class="w-full px-4 py-3.5 bg-heist-input border border-heist-lightgray rounded-xl focus:ring-2 focus:ring-heist-red focus:border-heist-red outline-none transition-all text-white shadow-inner text-sm sm:text-base">
+                    </div>
+                    <div class="relative group">
+                        <label class="block text-xs font-bold text-gray-400 mb-2 tracking-wider uppercase group-hover:text-heist-red transition-colors">Gender 🎭</label>
+                        <select id="gender" required class="w-full px-4 py-3.5 bg-heist-input border border-heist-lightgray rounded-xl focus:ring-2 focus:ring-heist-red focus:border-heist-red outline-none transition-all text-white shadow-inner cursor-pointer appearance-none text-sm sm:text-base">
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Personal Contact -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+                    <div class="relative group">
+                        <label class="block text-xs font-bold text-gray-400 mb-2 tracking-wider uppercase group-hover:text-heist-red transition-colors">Secure line 📞 (Phone)</label>
+                        <input type="tel" id="phone" pattern="^[6-9]\d{9}$" placeholder="9876543210" title="Enter a valid 10-digit mobile number" required class="w-full px-4 py-3.5 bg-heist-input border border-heist-lightgray rounded-xl focus:ring-2 focus:ring-heist-red focus:border-heist-red outline-none transition-all text-white shadow-inner placeholder-gray-600 text-sm sm:text-base">
+                    </div>
+                    <div class="relative group">
+                        <label class="block text-xs font-bold text-gray-400 mb-2 tracking-wider uppercase group-hover:text-heist-red transition-colors">Encrypted Email 📧</label>
+                        <input type="email" id="email" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" placeholder="codename@mail.com" required class="w-full px-4 py-3.5 bg-heist-input border border-heist-lightgray rounded-xl focus:ring-2 focus:ring-heist-red focus:border-heist-red outline-none transition-all text-white shadow-inner placeholder-gray-600 text-sm sm:text-base">
+                    </div>
+                </div>
+
+                <!-- Guardian Contact -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+                    <div class="relative group">
+                        <label class="block text-xs font-bold text-gray-400 mb-2 tracking-wider uppercase group-hover:text-heist-red transition-colors">Guardian (Father's Name)</label>
+                        <input type="text" id="fatherName" required class="w-full px-4 py-3.5 bg-heist-input border border-heist-lightgray rounded-xl focus:ring-2 focus:ring-heist-red focus:border-heist-red outline-none transition-all text-white shadow-inner placeholder-gray-600 text-sm sm:text-base">
+                    </div>
+                    <div class="relative group">
+                        <label class="block text-xs font-bold text-gray-400 mb-2 tracking-wider uppercase group-hover:text-heist-red transition-colors">Guardian's Line 📞 (Father's Phone)</label>
+                        <input type="tel" id="fatherPhone" pattern="^[6-9]\d{9}$" placeholder="9876543210" title="Enter a valid 10-digit mobile number" required class="w-full px-4 py-3.5 bg-heist-input border border-heist-lightgray rounded-xl focus:ring-2 focus:ring-heist-red focus:border-heist-red outline-none transition-all text-white shadow-inner placeholder-gray-600 text-sm sm:text-base">
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submitBtn" class="w-full mt-8 bg-heist-red hover:bg-heist-darkred text-white font-black tracking-widest uppercase py-4 px-4 rounded-xl shadow-glow-red hover:shadow-glow-red-lg transition-all duration-300 flex justify-center items-center transform hover:-translate-y-1 active:translate-y-0 text-sm sm:text-base">
+                    <span id="btnText">Initiate Registration</span>
+                    <svg id="loadingSpinner" class="hidden animate-spin ml-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- SUCCESS & QR CODE SECTION -->
+    <section id="success-section" class="hidden w-full max-w-lg mt-8 sm:mt-12 mb-auto px-4 relative z-10">
+        <div class="bg-heist-gray border border-heist-lightgray rounded-[24px] p-6 sm:p-10 text-center shadow-glow-red relative overflow-hidden flex flex-col items-center">
+            <div class="absolute top-0 left-0 w-full h-1 bg-heist-red"></div>
+            
+            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-heist-black border-2 border-heist-red rounded-full flex items-center justify-center mx-auto mb-6 shadow-glow-red animate-pulse-slow">
+                <svg class="w-8 h-8 sm:w-10 sm:h-10 text-heist-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            
+            <h2 class="text-2xl sm:text-3xl font-black text-white mb-2 tracking-wider uppercase">Identity Secured</h2>
+            <p class="text-gray-400 mb-6 tracking-wide text-xs sm:text-sm">The Professor acknowledges your registration.</p>
+            
+            <!-- QR Code Display -->
+            <div class="bg-white p-4 rounded-xl inline-block shadow-glow-red-inner mb-4 relative group w-max mx-auto">
+                <div id="qrcode"></div>
+                <!-- Overlay for screenshot instructions -->
+                <div class="absolute inset-0 bg-black/85 flex items-center justify-center rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span class="text-white text-xs font-bold uppercase tracking-widest text-center px-2">Take a screenshot<br>or save</span>
+                </div>
+            </div>
+
+            <p class="text-heist-red font-bold text-xs sm:text-sm mb-6 animate-pulse px-4">⚠️ Save this QR code. It is required for entry.</p>
+            
+            <div class="w-full space-y-4">
+                <!-- Action Buttons Row -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="downloadQR()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-bold py-3.5 px-6 rounded-xl transition-colors border border-gray-600 text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        Save QR
+                    </button>
+                    <button onclick="resetForm()" class="flex-1 bg-transparent hover:bg-heist-red/10 text-gray-400 hover:text-white font-bold py-3.5 px-6 rounded-xl transition-colors border border-transparent hover:border-heist-red/30 text-xs sm:text-sm uppercase tracking-wider">
+                        New Operative
+                    </button>
+                </div>
+
+                <!-- WhatsApp Link Button -->
+                <a href="https://chat.whatsapp.com/LItafBnM3EM5pvSwBtfNXg?s=cl&p=i&ilr=0" target="_blank" class="w-full bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366] text-[#25D366] font-bold py-4 px-6 rounded-xl transition-colors text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-3">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+                    </svg>
+                    Join Secure Comms
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCANNER MODAL (Hidden by default, triggered by footer click) -->
+    <div id="scanner-modal" class="fixed inset-0 z-[100] bg-black/95 hidden flex-col items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+        <div class="bg-[#111] border border-heist-red p-6 rounded-2xl max-w-md w-full relative shadow-glow-red">
+            <button onclick="closeScanner()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors bg-gray-800 rounded-full w-8 h-8 flex items-center justify-center">✕</button>
+            <h2 class="text-xl sm:text-2xl font-black text-white uppercase tracking-widest flex items-center justify-center gap-3 mb-6">
+                <span class="text-heist-red">🔐</span> Vault Scanner
+            </h2>
+            
+            <div id="reader" class="w-full"></div>
+            
+            <div id="scan-result-container" class="mt-6 hidden text-center bg-[#1a1a1a] p-4 rounded-xl border border-gray-800">
+                <p id="scan-result-text" class="text-white font-bold mb-4 text-sm sm:text-base"></p>
+                <button onclick="resumeScanner()" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-2 rounded-xl transition-colors border border-gray-600 uppercase text-sm tracking-wider font-bold">
+                    Scan Next Operative
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER (Clickable for Admin access) -->
+    <footer onclick="triggerScanner()" class="w-full text-center text-gray-600 hover:text-heist-red text-[9px] sm:text-[10px] mt-12 mb-6 tracking-[0.2em] font-medium uppercase leading-relaxed relative z-10 px-4 cursor-pointer transition-colors duration-300 select-none">
+        Rotary Club of Chennai Icons<br>
+        Annette President Sourav Gulacha & Secretary Navya Surana
+    </footer>
+
+    <!-- Application Logic -->
+    <script>
+        // =====================================================================
+        // ⚠️ IMPORTANT: REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
+        // =====================================================================
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxCO1otAIjI_O0Z3Qq6Z0yW1bQJTO2w3xZ2hy4Z33mDv_CEw4wyuXsr-eyrH_z0HAls/exec";
+        
+        let vaultPassword = "";
+        let html5QrcodeScanner;
+        let isProcessingScan = false; // Add this line to lock scanning
+
+        // --- 0. Splash Screen & Initialization ---
+        window.addEventListener('load', () => {
+            // Set DOB max date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dob').setAttribute('max', today);
+
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                const form = document.getElementById('form-section');
+                splash.style.opacity = '0';
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                    form.classList.remove('hidden');
+                    // Small delay before fading in
+                    setTimeout(() => {
+                        form.classList.remove('opacity-0');
+                    }, 50);
+                }, 700);
+            }, 2000); // 2 second loading screen
+        });
+
+        // --- 1. Age Calculation Logic ---
+        document.getElementById('dob').addEventListener('change', function() {
+            const dobInput = this.value;
+            if (!dobInput) return;
+
+            const dobDate = new Date(dobInput);
+            const today = new Date();
+            
+            let age = today.getFullYear() - dobDate.getFullYear();
+            const m = today.getMonth() - dobDate.getMonth();
+            
+            // Adjust age if birthday hasn't occurred yet this year
+            if (m < 0 || (m === 0 && today.getDate() < dobDate.getDate())) {
+                age--;
+            }
+            
+            // Set age value, ensure it isn't negative
+            document.getElementById('age').value = age > 0 ? age : 0;
+            
+            // Add slight highlight effect to show it auto-filled
+            const ageInput = document.getElementById('age');
+            ageInput.classList.add('border-heist-red', 'text-white');
+            setTimeout(() => {
+                ageInput.classList.remove('border-heist-red', 'text-white');
+            }, 1000);
+        });
+
+        // --- 2. Form Handling (Updated to use fetch for GitHub hosting) ---
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed', 'scale-95');
+            document.getElementById('btnText').innerText = "Encrypting Data...";
+            document.getElementById('loadingSpinner').classList.remove('hidden');
+
+            const formData = {
+                name: document.getElementById('name').value,
+                age: document.getElementById('age').value,
+                dob: document.getElementById('dob').value,
+                gender: document.getElementById('gender').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                fatherName: document.getElementById('fatherName').value,
+                fatherPhone: document.getElementById('fatherPhone').value,
+            };
+
+            // Send POST request to Google Apps Script Web App
+            fetch(GAS_WEB_APP_URL, {
+                method: 'POST',
+                // Using text/plain ensures no CORS preflight issues for simple POSTs
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                onSubmissionSuccess(data);
+            })
+            .catch(error => {
+                onSubmissionError(error.message || "Network Error");
+            });
+        }
+
+        function onSubmissionSuccess(response) {
+            if (response.success) {
+                document.getElementById('form-section').classList.add('hidden');
+                document.getElementById('success-section').classList.remove('hidden');
+                
+                document.getElementById('qrcode').innerHTML = ""; 
+                new QRCode(document.getElementById("qrcode"), {
+                    text: response.uniqueId,
+                    width: window.innerWidth < 400 ? 160 : 200, // Responsive QR size
+                    height: window.innerWidth < 400 ? 160 : 200,
+                    colorDark : "#0a0a0a",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+            } else {
+                onSubmissionError(response.message);
+            }
+        }
+
+        function onSubmissionError(error) {
+            alert("System Error: " + error + "\nCheck if the GAS URL is correct.");
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = false;
+            btn.classList.remove('opacity-75', 'cursor-not-allowed', 'scale-95');
+            document.getElementById('btnText').innerText = "Initiate Registration";
+            document.getElementById('loadingSpinner').classList.add('hidden');
+        }
+
+        function downloadQR() {
+            const canvas = document.querySelector('#qrcode canvas');
+            if (canvas) {
+                const url = canvas.toDataURL("image/png");
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Resistance_QR_Entry.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } else {
+                alert("QR Code generation failed. Please take a screenshot instead.");
+            }
+        }
+
+        // --- SPA Form Reset Logic ---
+        function resetForm() {
+            document.getElementById('registrationForm').reset();
+            document.getElementById('age').value = '';
+            
+            document.getElementById('success-section').classList.add('hidden');
+            document.getElementById('form-section').classList.remove('hidden');
+            
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = false;
+            btn.classList.remove('opacity-75', 'cursor-not-allowed', 'scale-95');
+            document.getElementById('btnText').innerText = "Initiate Registration";
+            document.getElementById('loadingSpinner').classList.add('hidden');
+        }
+
+        // --- 3. QR Scanner Logic (Triggered by Footer Click) ---
+        function triggerScanner() {
+            // Prompt for Admin Password
+            vaultPassword = prompt("Vault Access Passcode required for Scanner:");
+            if (!vaultPassword) return; // User cancelled or entered empty string
+            
+            isProcessingScan = false; // Reset lock
+
+            // Show Scanner Modal
+            document.getElementById('scanner-modal').classList.remove('hidden');
+            document.getElementById('scanner-modal').classList.add('flex');
+            document.getElementById('scan-result-container').classList.add('hidden');
+            document.getElementById('reader').style.display = 'block';
+
+            // Initialize scanner if not already initialized
+            if (!html5QrcodeScanner) {
+                html5QrcodeScanner = new Html5QrcodeScanner(
+                    "reader",
+                    { fps: 10, qrbox: { width: 250, height: 250 } },
+                    false
+                );
+            }
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        }
+
+        function closeScanner() {
+            document.getElementById('scanner-modal').classList.add('hidden');
+            document.getElementById('scanner-modal').classList.remove('flex');
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear().catch(e => console.log("Ignored clear error", e)); 
+                html5QrcodeScanner = null; // Reset instance so it correctly re-binds next time
+            }
+            isProcessingScan = false;
+        }
+
+        function onScanSuccess(decodedText) {
+            // If we are currently processing a scan, ignore any new ones
+            if (isProcessingScan) return;
+            isProcessingScan = true;
+            
+            // Hide the live camera view visually while loading
+            document.getElementById('reader').style.display = 'none';
+            
+            const resultContainer = document.getElementById('scan-result-container');
+            const resultText = document.getElementById('scan-result-text');
+            
+            resultContainer.classList.remove('hidden');
+            resultText.innerText = `Verifying ID: ${decodedText} ...`;
+            resultText.className = "text-yellow-500 font-bold mb-4 text-sm sm:text-base animate-pulse";
+
+            // Prepare GET request for backend attendance mark
+            const requestUrl = `${GAS_WEB_APP_URL}?qrData=${encodeURIComponent(decodedText)}&password=${encodeURIComponent(vaultPassword)}`;
+            
+            fetch(requestUrl)
+                .then(response => response.text())
+                .then(text => {
+                    resultText.classList.remove('animate-pulse');
+                    resultText.innerText = text;
+                    
+                    // Style response based on backend text
+                    if (text.includes("Success")) {
+                        resultText.className = "text-green-500 font-bold mb-4 text-sm sm:text-base";
+                    } else if (text.includes("Already")) {
+                        resultText.className = "text-yellow-500 font-bold mb-4 text-sm sm:text-base";
+                    } else {
+                        resultText.className = "text-heist-red font-bold mb-4 text-sm sm:text-base";
+                    }
+                })
+                .catch(error => {
+                    resultText.classList.remove('animate-pulse');
+                    resultText.innerText = "Network Error. Unable to reach Vault.";
+                    resultText.className = "text-heist-red font-bold mb-4 text-sm sm:text-base";
+                    console.error('Error:', error);
+                });
+        }
+
+        function resumeScanner() {
+            document.getElementById('scan-result-container').classList.add('hidden');
+            document.getElementById('reader').style.display = 'block';
+            
+            // Wait half a second before allowing the next scan to prevent 
+            // instantly scanning the same code if they haven't moved their phone yet
+            setTimeout(() => {
+                isProcessingScan = false;
+            }, 500);
+        }
+
+        function onScanFailure(error) {
+            // Quietly ignore background scan failures (when no QR is in view)
+        }
+    </script>
+</body>
+</html>
