@@ -329,12 +329,25 @@
         Annette President Sourav Gulacha & Secretary Navya Surana
     </footer>
 
+    <!-- BACKGROUND MUSIC -->
+    <audio id="heist-music" loop>
+        <source src="https://souravgulecha.github.io/RCCI/bella-ciao.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- FLOATING MUSIC TOGGLE BUTTON -->
+    <button id="music-toggle" onclick="toggleMusic()" class="fixed bottom-6 right-6 z-50 bg-heist-red p-3 sm:p-4 rounded-full shadow-glow-red hover:shadow-glow-red-lg text-white transition-all duration-300 hover:scale-110 flex items-center justify-center opacity-0 pointer-events-none">
+        <!-- Play Icon (Default) -->
+        <svg id="icon-play" class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+        <!-- Pause/Mute Icon (Hidden by default) -->
+        <svg id="icon-pause" class="w-5 h-5 sm:w-6 sm:h-6 hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+    </button>
+
     <!-- Application Logic -->
     <script>
         // =====================================================================
         // ⚠️ IMPORTANT: REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
         // =====================================================================
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzkbTdyZQNJWxhpxqk95kKobWsMS-JOXmNWMkarD81AKKCMmSCNhgBU_ufTLQ0GUQ9LQg/exec";
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzvR1HFeTm4MfKqcxm7KdL_1eiHJ21RaFVwSswJW4Pp00z8zDMrQW9AsQQXrwbKRJnodw/exec";
         
         let vaultPassword = "";
         let html5QrcodeScanner;
@@ -575,6 +588,39 @@
         function onScanFailure(error) {
             // Quietly ignore background scan failures (when no QR is in view)
         }
+
+        // --- 4. Background Music Logic ---
+        const music = document.getElementById('heist-music');
+        const musicBtn = document.getElementById('music-toggle');
+        const iconPlay = document.getElementById('icon-play');
+        const iconPause = document.getElementById('icon-pause');
+        let isPlaying = false;
+
+        // Fade in the music button after the splash screen finishes loading
+        setTimeout(() => {
+            musicBtn.classList.remove('opacity-0', 'pointer-events-none');
+        }, 2500);
+
+        // Function to handle playing/pausing and swapping the icon
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                iconPause.classList.add('hidden');
+                iconPlay.classList.remove('hidden');
+            } else {
+                music.play().catch(e => console.log("Audio play blocked by browser until user interacts."));
+                iconPlay.classList.add('hidden');
+                iconPause.classList.remove('hidden');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Smart Trigger: Play music on the user's very first click anywhere on the page
+        document.body.addEventListener('click', () => {
+            if (!isPlaying && music.readyState >= 2) { 
+                toggleMusic();
+            }
+        }, { once: true }); // { once: true } means this event listener destroys itself after 1 click
     </script>
 </body>
 </html>
