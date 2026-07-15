@@ -175,13 +175,21 @@
                         </ul>
                     </div>
 
-                    <!-- NEW QR CODE INSTRUCTION NOTE -->
+                    <!-- QR CODE INSTRUCTION NOTE -->
                     <div class="border-l-4 border-yellow-500 pl-4 mt-6 bg-yellow-500/10 p-4 rounded-r-xl shadow-inner">
                         <h3 class="text-yellow-500 font-bold mb-2 flex items-center gap-2 text-sm sm:text-base">🎫 Mandatory Security Protocol</h3>
                         <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
                             Upon successful registration, a <strong class="text-white">Unique QR Code</strong> will be generated. 
                             You <strong class="text-heist-red uppercase tracking-wider">must save or screenshot</strong> this code. 
                             You will be required to present it at the registration desk on the day of the heist to gain access to the Vault.
+                        </p>
+                    </div>
+
+                    <!-- WHATSAPP INSTRUCTION NOTE -->
+                    <div class="border-l-4 border-[#25D366] pl-4 mt-4 bg-[#25D366]/10 p-4 rounded-r-xl shadow-inner">
+                        <h3 class="text-[#25D366] font-bold mb-2 flex items-center gap-2 text-sm sm:text-base">📱 Secure Comms Required</h3>
+                        <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                            After registering successfully, <strong class="text-white">make sure you join the WhatsApp group</strong> using the link provided on the next page for exciting updates and mission briefings!
                         </p>
                     </div>
 
@@ -323,6 +331,18 @@
         </div>
     </div>
 
+    <!-- CUSTOM ALERT MODAL (Replaces standard browser alerts) -->
+    <div id="custom-alert" class="fixed inset-0 z-[200] bg-black/90 hidden flex-col items-center justify-center p-4 backdrop-blur-sm transition-opacity opacity-0">
+        <div class="bg-[#111] border border-heist-red p-6 rounded-2xl max-w-sm w-full relative shadow-glow-red text-center transform scale-95 transition-transform duration-300" id="custom-alert-box">
+            <div class="w-16 h-16 bg-heist-black border-2 border-heist-red rounded-full flex items-center justify-center mx-auto mb-4 shadow-glow-red">
+                <span id="custom-alert-icon" class="text-3xl">⚠️</span>
+            </div>
+            <h3 id="custom-alert-title" class="text-white font-black uppercase tracking-wider mb-2">Notice</h3>
+            <p id="custom-alert-message" class="text-gray-300 text-sm mb-6 leading-relaxed"></p>
+            <button onclick="closeCustomAlert()" class="bg-heist-red hover:bg-heist-darkred text-white font-bold py-3 px-6 rounded-xl transition-all shadow-glow-red uppercase text-sm tracking-wider w-full">Understood</button>
+        </div>
+    </div>
+
     <!-- FOOTER (Clickable for Admin access) -->
     <footer onclick="triggerScanner()" class="w-full text-center text-gray-600 hover:text-heist-red text-[9px] sm:text-[10px] mt-12 mb-6 tracking-[0.2em] font-medium uppercase leading-relaxed relative z-10 px-4 cursor-pointer transition-colors duration-300 select-none">
         Rotary Club of Chennai Icons<br>
@@ -351,11 +371,45 @@
         
         let vaultPassword = "";
         let html5QrcodeScanner;
-        let isProcessingScan = false; // Add this line to lock scanning
+        let isProcessingScan = false;
+
+        // --- Custom Alert System ---
+        function showCustomAlert(message, title = "System Error", icon = "⚠️") {
+            const modal = document.getElementById('custom-alert');
+            const box = document.getElementById('custom-alert-box');
+            
+            document.getElementById('custom-alert-message').innerText = message;
+            document.getElementById('custom-alert-title').innerText = title;
+            document.getElementById('custom-alert-icon').innerText = icon;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // Tiny delay to allow display:flex to apply before animating opacity
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                box.classList.remove('scale-95');
+                box.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeCustomAlert() {
+            const modal = document.getElementById('custom-alert');
+            const box = document.getElementById('custom-alert-box');
+            
+            modal.classList.add('opacity-0');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300); // Matches transition duration
+        }
 
         // --- 0. Splash Screen & Initialization ---
         window.addEventListener('load', () => {
-            // Set DOB max date to today
+            // Set DOB max date to today to prevent future birthdays
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('dob').setAttribute('max', today);
 
@@ -371,7 +425,7 @@
                         form.classList.remove('opacity-0');
                     }, 50);
                 }, 700);
-            }, 2000); // 2 second loading screen
+            }, 2000); 
         });
 
         // --- 1. Age Calculation Logic ---
@@ -401,11 +455,19 @@
             }, 1000);
         });
 
-        // --- 2. Form Handling (Updated to use fetch for GitHub hosting) ---
+        // --- 2. Form Handling ---
         function handleFormSubmit(event) {
             event.preventDefault();
             
             const btn = document.getElementById('submitBtn');
+            
+            // Check Age Restriction (10 to 27)
+            const age = parseInt(document.getElementById('age').value);
+            if (isNaN(age) || age < 10 || age > 27) {
+                showCustomAlert("The Professor dictates that operatives must be strictly between 10 and 27 years of age for this mission. Access Denied.", "Age Restriction", "🛑");
+                return; // Stop form submission
+            }
+            
             btn.disabled = true;
             btn.classList.add('opacity-75', 'cursor-not-allowed', 'scale-95');
             document.getElementById('btnText').innerText = "Encrypting Data...";
@@ -425,7 +487,6 @@
             // Send POST request to Google Apps Script Web App
             fetch(GAS_WEB_APP_URL, {
                 method: 'POST',
-                // Using text/plain ensures no CORS preflight issues for simple POSTs
                 headers: {
                     'Content-Type': 'text/plain;charset=utf-8',
                 },
@@ -448,7 +509,7 @@
                 document.getElementById('qrcode').innerHTML = ""; 
                 new QRCode(document.getElementById("qrcode"), {
                     text: response.uniqueId,
-                    width: window.innerWidth < 400 ? 160 : 200, // Responsive QR size
+                    width: window.innerWidth < 400 ? 160 : 200, 
                     height: window.innerWidth < 400 ? 160 : 200,
                     colorDark : "#0a0a0a",
                     colorLight : "#ffffff",
@@ -460,7 +521,7 @@
         }
 
         function onSubmissionError(error) {
-            alert("System Error: " + error + "\nCheck if the GAS URL is correct.");
+            showCustomAlert(error, "System Error");
             const btn = document.getElementById('submitBtn');
             btn.disabled = false;
             btn.classList.remove('opacity-75', 'cursor-not-allowed', 'scale-95');
@@ -479,7 +540,7 @@
                 a.click();
                 document.body.removeChild(a);
             } else {
-                alert("QR Code generation failed. Please take a screenshot instead.");
+                showCustomAlert("QR Code generation failed. Please take a screenshot instead.", "Download Failed");
             }
         }
 
@@ -500,19 +561,17 @@
 
         // --- 3. QR Scanner Logic (Triggered by Footer Click) ---
         function triggerScanner() {
-            // Prompt for Admin Password
+            // Because prompt cannot be fully styled, we leave this native but style the resulting errors.
             vaultPassword = prompt("Vault Access Passcode required for Scanner:");
-            if (!vaultPassword) return; // User cancelled or entered empty string
+            if (!vaultPassword) return; 
             
-            isProcessingScan = false; // Reset lock
+            isProcessingScan = false; 
 
-            // Show Scanner Modal
             document.getElementById('scanner-modal').classList.remove('hidden');
             document.getElementById('scanner-modal').classList.add('flex');
             document.getElementById('scan-result-container').classList.add('hidden');
             document.getElementById('reader').style.display = 'block';
 
-            // Initialize scanner if not already initialized
             if (!html5QrcodeScanner) {
                 html5QrcodeScanner = new Html5QrcodeScanner(
                     "reader",
@@ -528,17 +587,15 @@
             document.getElementById('scanner-modal').classList.remove('flex');
             if (html5QrcodeScanner) {
                 html5QrcodeScanner.clear().catch(e => console.log("Ignored clear error", e)); 
-                html5QrcodeScanner = null; // Reset instance so it correctly re-binds next time
+                html5QrcodeScanner = null; 
             }
             isProcessingScan = false;
         }
 
         function onScanSuccess(decodedText) {
-            // If we are currently processing a scan, ignore any new ones
             if (isProcessingScan) return;
             isProcessingScan = true;
             
-            // Hide the live camera view visually while loading
             document.getElementById('reader').style.display = 'none';
             
             const resultContainer = document.getElementById('scan-result-container');
@@ -548,7 +605,6 @@
             resultText.innerText = `Verifying ID: ${decodedText} ...`;
             resultText.className = "text-yellow-500 font-bold mb-4 text-sm sm:text-base animate-pulse";
 
-            // Prepare GET request for backend attendance mark
             const requestUrl = `${GAS_WEB_APP_URL}?qrData=${encodeURIComponent(decodedText)}&password=${encodeURIComponent(vaultPassword)}`;
             
             fetch(requestUrl)
@@ -557,7 +613,6 @@
                     resultText.classList.remove('animate-pulse');
                     resultText.innerText = text;
                     
-                    // Style response based on backend text
                     if (text.includes("Success")) {
                         resultText.className = "text-green-500 font-bold mb-4 text-sm sm:text-base";
                     } else if (text.includes("Already")) {
@@ -577,16 +632,13 @@
         function resumeScanner() {
             document.getElementById('scan-result-container').classList.add('hidden');
             document.getElementById('reader').style.display = 'block';
-            
-            // Wait half a second before allowing the next scan to prevent 
-            // instantly scanning the same code if they haven't moved their phone yet
             setTimeout(() => {
                 isProcessingScan = false;
             }, 500);
         }
 
         function onScanFailure(error) {
-            // Quietly ignore background scan failures (when no QR is in view)
+            // Background scan errors ignored
         }
 
         // --- 4. Background Music Logic ---
@@ -596,12 +648,10 @@
         const iconPause = document.getElementById('icon-pause');
         let isPlaying = false;
 
-        // Fade in the music button after the splash screen finishes loading
         setTimeout(() => {
             musicBtn.classList.remove('opacity-0', 'pointer-events-none');
         }, 2500);
 
-        // Function to handle playing/pausing and swapping the icon
         function toggleMusic() {
             if (isPlaying) {
                 music.pause();
@@ -615,12 +665,11 @@
             isPlaying = !isPlaying;
         }
 
-        // Smart Trigger: Play music on the user's very first click anywhere on the page
         document.body.addEventListener('click', () => {
             if (!isPlaying && music.readyState >= 2) { 
                 toggleMusic();
             }
-        }, { once: true }); // { once: true } means this event listener destroys itself after 1 click
+        }, { once: true }); 
     </script>
 </body>
 </html>
