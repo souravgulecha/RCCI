@@ -135,13 +135,30 @@
         </div>
         <h1 class="text-2xl sm:text-4xl font-black text-white tracking-[0.2em] uppercase drop-shadow-md text-center px-4">Iconic Money Heist</h1>
         <h2 class="text-sm sm:text-xl font-bold text-heist-red tracking-[0.3em] uppercase mt-2 drop-shadow-md text-center">The Pilot Episode</h2>
-        <p class="text-gray-500 mt-6 text-xs tracking-widest uppercase">Establishing Secure Connection...</p>
+        <p id="splash-text" class="text-gray-500 mt-6 text-xs tracking-widest uppercase">Checking Vault Status...</p>
         
         <!-- Loading Bar -->
         <div class="mt-4 w-48 sm:w-64 h-1 bg-gray-800 rounded-full overflow-hidden">
             <div class="h-full bg-heist-red animate-loading-bar shadow-glow-red"></div>
         </div>
     </div>
+
+    <!-- VAULT CLOSED SECTION -->
+    <main id="closed-section" class="w-full max-w-xl px-4 py-8 sm:p-6 mb-auto relative z-10 hidden opacity-0 transition-opacity duration-700">
+        <div class="bg-heist-gray border border-heist-red/50 rounded-[24px] p-8 sm:p-12 shadow-glow-red relative text-center">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-heist-red to-transparent rounded-t-[24px]"></div>
+            
+            <div class="w-20 h-20 bg-heist-black border-2 border-heist-red rounded-full flex items-center justify-center mx-auto mb-6 shadow-glow-red">
+                <span class="text-4xl">🛑</span>
+            </div>
+            
+            <h2 class="text-2xl sm:text-3xl font-black text-white mb-4 tracking-wider uppercase">Vault Sealed</h2>
+            <p class="text-gray-300 text-sm sm:text-base leading-relaxed mb-6">
+                The Professor has sealed the Vault. Registration for <strong class="text-white">Iconic Money Heist: The Pilot Episode</strong> has officially concluded.
+            </p>
+            <p class="text-heist-red font-bold uppercase tracking-widest text-sm sm:text-base">Bella Ciao! 🎭</p>
+        </div>
+    </main>
 
     <!-- MAIN FORM SECTION -->
     <main id="form-section" class="w-full max-w-3xl px-4 py-8 sm:p-6 mb-auto relative z-10 hidden opacity-0 transition-opacity duration-700">
@@ -171,7 +188,7 @@
                         <ul class="text-xs sm:text-sm space-y-2 text-yellow-500">
                             <li>💰 On or before 17th: <span class="font-bold text-white">+100 AP</span></li>
                             <li>💰 On 18th: <span class="font-bold text-white">+50 AP</span></li>
-                            <li>💰 On 19th onwards: <span class="font-bold text-white">No bonus points</span></li>
+                            <li class="text-heist-red mt-2 pt-2 border-t border-yellow-500/20">🚨 <span class="font-bold text-white">The Vault seals permanently on July 18th at 4:00 PM.</span></li>
                         </ul>
                     </div>
 
@@ -226,6 +243,8 @@
                             <option value="" disabled selected>Select Gender</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
                         </select>
                     </div>
                 </div>
@@ -367,7 +386,7 @@
         // =====================================================================
         // ⚠️ IMPORTANT: REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
         // =====================================================================
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwJ5AuXjg_oIJTnJPljlOTYVNlcBZQKD24dOoUc_psjLMA2ypT38sA-lH_bZFXNYI5p/exec";
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxCO1otAIjI_O0Z3Qq6Z0yW1bQJTO2w3xZ2hy4Z33mDv_CEw4wyuXsr-eyrH_z0HAls/exec";
         
         let vaultPassword = "";
         let html5QrcodeScanner;
@@ -385,7 +404,6 @@
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             
-            // Tiny delay to allow display:flex to apply before animating opacity
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
                 box.classList.remove('scale-95');
@@ -404,29 +422,42 @@
             setTimeout(() => {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
-            }, 300); // Matches transition duration
+            }, 300); 
         }
 
         // --- 0. Splash Screen & Initialization ---
         window.addEventListener('load', () => {
-            // Set DOB max date to today to prevent future birthdays
+            // Set DOB max date to today
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('dob').setAttribute('max', today);
 
+            // Fetch current vault status from backend
+            fetch(`${GAS_WEB_APP_URL}?action=getStatus`)
+                .then(res => res.json())
+                .then(data => {
+                    hideSplashAndShow(data.isOpen ? 'form-section' : 'closed-section');
+                })
+                .catch(() => {
+                    // Fallback to open if network issue on fetch, backend will still reject if truly closed
+                    hideSplashAndShow('form-section');
+                });
+        });
+
+        function hideSplashAndShow(sectionId) {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
-                const form = document.getElementById('form-section');
+                const targetSection = document.getElementById(sectionId);
                 splash.style.opacity = '0';
                 setTimeout(() => {
                     splash.style.display = 'none';
-                    form.classList.remove('hidden');
-                    // Small delay before fading in
+                    targetSection.classList.remove('hidden');
+                    // Small delay before fading in target section
                     setTimeout(() => {
-                        form.classList.remove('opacity-0');
+                        targetSection.classList.remove('opacity-0');
                     }, 50);
                 }, 700);
-            }, 2000); 
-        });
+            }, 1500); 
+        }
 
         // --- 1. Age Calculation Logic ---
         document.getElementById('dob').addEventListener('change', function() {
@@ -439,15 +470,12 @@
             let age = today.getFullYear() - dobDate.getFullYear();
             const m = today.getMonth() - dobDate.getMonth();
             
-            // Adjust age if birthday hasn't occurred yet this year
             if (m < 0 || (m === 0 && today.getDate() < dobDate.getDate())) {
                 age--;
             }
             
-            // Set age value, ensure it isn't negative
             document.getElementById('age').value = age > 0 ? age : 0;
             
-            // Add slight highlight effect to show it auto-filled
             const ageInput = document.getElementById('age');
             ageInput.classList.add('border-heist-red', 'text-white');
             setTimeout(() => {
@@ -464,8 +492,8 @@
             // Check Age Restriction (10 to 27)
             const age = parseInt(document.getElementById('age').value);
             if (isNaN(age) || age < 10 || age > 27) {
-                showCustomAlert("The Professor dictates that operatives must be strictly above 10 years of age for this mission. Access Denied.", "Age Restriction", "🛑");
-                return; // Stop form submission
+                showCustomAlert("The Professor dictates that operatives must be strictly between 10 and 27 years of age for this mission. Access Denied.", "Age Restriction", "🛑");
+                return; 
             }
             
             btn.disabled = true;
@@ -484,7 +512,6 @@
                 fatherPhone: document.getElementById('fatherPhone').value,
             };
 
-            // Send POST request to Google Apps Script Web App
             fetch(GAS_WEB_APP_URL, {
                 method: 'POST',
                 headers: {
@@ -544,7 +571,6 @@
             }
         }
 
-        // --- SPA Form Reset Logic ---
         function resetForm() {
             document.getElementById('registrationForm').reset();
             document.getElementById('age').value = '';
@@ -561,10 +587,11 @@
 
         // --- 3. QR Scanner Logic (Triggered by Footer Click) ---
         function triggerScanner() {
-            // Because prompt cannot be fully styled, we leave this native but style the resulting errors.
-            vaultPassword = prompt("Vault Access Passcode required for Scanner:");
-            if (!vaultPassword) return; 
+            let pass = prompt("Vault Access Passcode required for Scanner:");
+            if (!pass) return; 
             
+            // Clean up accidental spaces at start or end
+            vaultPassword = pass.trim();
             isProcessingScan = false; 
 
             document.getElementById('scanner-modal').classList.remove('hidden');
