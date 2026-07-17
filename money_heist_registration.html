@@ -13,7 +13,6 @@
     <!-- HTML5 QRCode Scanner for Admin Vault Access -->
     <script src="https://unpkg.com/html5-qrcode"></script>
     
-    <!-- Custom Theme & Animations Configuration -->
     <script>
         tailwind.config = {
             theme: {
@@ -390,37 +389,37 @@
         let html5QrcodeScanner;
         let isProcessingScan = false;
 
-        // --- Custom Alert System ---
-        function showCustomAlert(message, title = "System Error", icon = "⚠️") {
-            const modal = document.getElementById('custom-alert');
-            const box = document.getElementById('custom-alert-box');
-            
-            document.getElementById('custom-alert-message').innerText = message;
+        // Custom Alert Functions
+        function showCustomAlert(message, title = "Notice", icon = "⚠️") {
             document.getElementById('custom-alert-title').innerText = title;
+            document.getElementById('custom-alert-message').innerText = message;
             document.getElementById('custom-alert-icon').innerText = icon;
             
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            const alertModal = document.getElementById('custom-alert');
+            const alertBox = document.getElementById('custom-alert-box');
+            
+            alertModal.classList.remove('hidden');
+            alertModal.classList.add('flex');
             
             setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                box.classList.remove('scale-95');
-                box.classList.add('scale-100');
+                alertModal.classList.remove('opacity-0');
+                alertBox.classList.remove('scale-95');
+                alertBox.classList.add('scale-100');
             }, 10);
         }
 
         function closeCustomAlert() {
-            const modal = document.getElementById('custom-alert');
-            const box = document.getElementById('custom-alert-box');
+            const alertModal = document.getElementById('custom-alert');
+            const alertBox = document.getElementById('custom-alert-box');
             
-            modal.classList.add('opacity-0');
-            box.classList.remove('scale-100');
-            box.classList.add('scale-95');
+            alertModal.classList.add('opacity-0');
+            alertBox.classList.remove('scale-100');
+            alertBox.classList.add('scale-95');
             
             setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }, 300); 
+                alertModal.classList.add('hidden');
+                alertModal.classList.remove('flex');
+            }, 300);
         }
 
         // --- 0. Splash Screen & Initialization ---
