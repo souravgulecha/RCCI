@@ -490,7 +490,7 @@
             // Check Age Restriction (10 to 27)
             const age = parseInt(document.getElementById('age').value);
             if (isNaN(age) || age < 10 || age > 27) {
-                showCustomAlert("The Professor dictates that operatives must be strictly between 10 and 27 years of age for this mission. Access Denied.", "Age Restriction", "🛑");
+                showCustomAlert("The Professor dictates that operatives must be strictly within the agreed age limit for this mission. Access Denied.", "Age Restriction", "🛑");
                 return; 
             }
             
