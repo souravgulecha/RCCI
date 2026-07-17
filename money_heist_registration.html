@@ -328,7 +328,7 @@
         </div>
     </section>
 
-    <!-- SCANNER MODAL (Hidden by default, triggered by footer click) -->
+    <!-- SCANNER MODAL -->
     <div id="scanner-modal" class="fixed inset-0 z-[100] bg-black/95 hidden flex-col items-center justify-center p-4 backdrop-blur-sm transition-opacity">
         <div class="bg-[#111] border border-heist-red p-6 rounded-2xl max-w-md w-full relative shadow-glow-red">
             <button onclick="closeScanner()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors bg-gray-800 rounded-full w-8 h-8 flex items-center justify-center">✕</button>
@@ -347,7 +347,7 @@
         </div>
     </div>
 
-    <!-- CUSTOM ALERT MODAL (Replaces standard browser alerts) -->
+    <!-- CUSTOM ALERT MODAL -->
     <div id="custom-alert" class="fixed inset-0 z-[200] bg-black/90 hidden flex-col items-center justify-center p-4 backdrop-blur-sm transition-opacity opacity-0">
         <div class="bg-[#111] border border-heist-red p-6 rounded-2xl max-w-sm w-full relative shadow-glow-red text-center transform scale-95 transition-transform duration-300" id="custom-alert-box">
             <div class="w-16 h-16 bg-heist-black border-2 border-heist-red rounded-full flex items-center justify-center mx-auto mb-4 shadow-glow-red">
@@ -359,7 +359,7 @@
         </div>
     </div>
 
-    <!-- FOOTER (Clickable for Admin access) -->
+    <!-- FOOTER -->
     <footer onclick="triggerScanner()" class="w-full text-center text-gray-600 hover:text-heist-red text-[9px] sm:text-[10px] mt-12 mb-6 tracking-[0.2em] font-medium uppercase leading-relaxed relative z-10 px-4 cursor-pointer transition-colors duration-300 select-none">
         Rotary Club of Chennai Icons<br>
         Annette President Sourav Gulacha & Secretary Navya Surana
@@ -372,9 +372,9 @@
 
     <!-- FLOATING MUSIC TOGGLE BUTTON -->
     <button id="music-toggle" onclick="toggleMusic()" class="fixed bottom-6 right-6 z-50 bg-heist-red p-3 sm:p-4 rounded-full shadow-glow-red hover:shadow-glow-red-lg text-white transition-all duration-300 hover:scale-110 flex items-center justify-center opacity-0 pointer-events-none">
-        <!-- Play Icon (Default) -->
+        <!-- Play Icon -->
         <svg id="icon-play" class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
-        <!-- Pause/Mute Icon (Hidden by default) -->
+        <!-- Pause Icon -->
         <svg id="icon-pause" class="w-5 h-5 sm:w-6 sm:h-6 hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
     </button>
 
@@ -383,7 +383,7 @@
         // =====================================================================
         // ⚠️ IMPORTANT: REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
         // =====================================================================
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxCO1otAIjI_O0Z3Qq6Z0yW1bQJTO2w3xZ2hy4Z33mDv_CEw4wyuXsr-eyrH_z0HAls/exec";
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwJ5AuXjg_oIJTnJPljlOTYVNlcBZQKD24dOoUc_psjLMA2ypT38sA-lH_bZFXNYI5p/exec";
         
         let vaultPassword = "";
         let html5QrcodeScanner;
@@ -428,11 +428,20 @@
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('dob').setAttribute('max', today);
 
-            // Fetch current vault status from backend
-            fetch(`${GAS_WEB_APP_URL}?action=getStatus`)
-                .then(res => res.json())
-                .then(data => {
-                    hideSplashAndShow(data.isOpen ? 'form-section' : 'closed-section');
+            // Fetch current vault status from backend with a Cache-Buster
+            const cacheBuster = new Date().getTime();
+            
+            fetch(`${GAS_WEB_APP_URL}?action=getStatus&t=${cacheBuster}`)
+                .then(res => res.text()) // Use text() first to avoid silent JSON crashes
+                .then(text => {
+                    try {
+                        const data = JSON.parse(text);
+                        hideSplashAndShow(data.isOpen ? 'form-section' : 'closed-section');
+                    } catch (e) {
+                        // If it fails to parse, it means the Google Script is running an old version!
+                        console.error("Backend didn't return valid JSON. Did you deploy a New Version? Response:", text);
+                        hideSplashAndShow('form-section'); // Fallback so the site doesn't stay stuck loading
+                    }
                 })
                 .catch(() => {
                     // Fallback to open if network issue on fetch, backend will still reject if truly closed
@@ -582,7 +591,7 @@
             document.getElementById('loadingSpinner').classList.add('hidden');
         }
 
-        // --- 3. QR Scanner Logic (Triggered by Footer Click) ---
+        // --- 3. QR Scanner Logic ---
         function triggerScanner() {
             let pass = prompt("Vault Access Passcode required for Scanner:");
             if (!pass) return; 
